@@ -22,6 +22,8 @@ include_directories(/usr/local/Cellar/open-mpi/2.1.1/include)
 link_directories(/usr/local/opt/libevent/lib)
 link_directories(/usr/local/Cellar/open-mpi/2.1.1/lib)
 
+set(LOG_LEVEL LOG_DEBUG)
+
 # Third-party libraries
 add_subdirectory(lib)
 
