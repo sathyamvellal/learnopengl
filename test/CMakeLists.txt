@@ -1,5 +1,14 @@
-cmake_minimum_required(VERSION 3.9)
+cmake_minimum_required(VERSION 3.8)
 project(${CMAKE_PROJECT_NAME}-test)
+
+function(create_add_executable name)
+    add_executable(test-${name} ${name}/test-${name}.cpp)
+    target_link_libraries(test-${name} ${name} common glfw glad)
+endfunction(create_add_executable)
+
 
 add_executable(hello test_hello.cpp)
 target_link_libraries(hello common)
+
+create_add_executable(hello_window)
+target_compile_definitions(hello_window PUBLIC LOG_LEVEL=${LOG_LEVEL})
