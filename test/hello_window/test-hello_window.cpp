@@ -12,6 +12,7 @@ const int HEIGHT = 600;
 const char* TITLE = "LearnOpenGL: Hello Window";
 
 void framebufferSizeCallback(GLFWwindow* window, int width, int height);
+void processInput(GLFWwindow* window);
 
 int main(int argc, char** argv)
 {
@@ -58,6 +59,8 @@ int main(int argc, char** argv)
     log<LOG_INFO>(L"successfully initialised GLAD ...");
     log<LOG_INFO>(L"starting main loop ...");
     while(!glfwWindowShouldClose(window)) {
+        processInput(window);
+
         glfwSwapBuffers(window);
         glfwPollEvents();
     }
@@ -70,4 +73,11 @@ int main(int argc, char** argv)
 void framebufferSizeCallback(GLFWwindow* window, int width, int height)
 {
     glViewport(0, 0, width, height);
+}
+
+void processInput(GLFWwindow* window)
+{
+    if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS) {
+        glfwSetWindowShouldClose(window, true);
+    }
 }
