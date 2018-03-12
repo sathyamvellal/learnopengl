@@ -3,8 +3,11 @@ project(${CMAKE_PROJECT_NAME}-common)
 
 set(PROJECT_SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR})
 
-set(HELLO_SRC
-        src/hello.cpp)
+set(COMMON_SRC src)
+set(UTILS_SRC src/utils)
 
 add_library(common STATIC
-        ${HELLO_SRC})
+        ${COMMON_SRC}/hello.cpp
+        ${UTILS_SRC}/logger.cpp
+        ${UTILS_SRC}/files.cpp
+        ${UTILS_SRC}/shader.cpp)
