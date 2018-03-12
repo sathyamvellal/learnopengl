@@ -18,6 +18,8 @@ include_directories(${PROJECT_INCLUDE_DIR})
 include_directories(${PROJECT_SOURCE_DIR})
 include_directories(${COMMON_INCLUDE_DIR})
 
+include_directories(${CMAKE_BUILD_DIR}/lib/glad/include)
+
 include_directories(/usr/local/Cellar/open-mpi/2.1.1/include)
 link_directories(/usr/local/opt/libevent/lib)
 link_directories(/usr/local/Cellar/open-mpi/2.1.1/lib)
