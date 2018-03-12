@@ -24,15 +24,7 @@ enum LogLevel {
     LOG_VERBOSE
 };
 
-const char* LogLevelString[] = {
-        "nothing",
-        "critical",
-        "error",
-        "warning",
-        "info",
-        "debug",
-        "verbose"
-};
+extern const char* LogLevelString[];
 
 namespace Log {
     class FormattedLog {

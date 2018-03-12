@@ -5,7 +5,7 @@
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 
-#include <utils/logger.hpp>
+#include "utils/logger.h"
 
 const int WIDTH = 800;
 const int HEIGHT = 600;
@@ -60,6 +60,9 @@ int main(int argc, char** argv)
     log<LOG_INFO>(L"starting main loop ...");
     while(!glfwWindowShouldClose(window)) {
         processInput(window);
+
+        glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
+        glClear(GL_COLOR_BUFFER_BIT);
 
         glfwSwapBuffers(window);
         glfwPollEvents();
