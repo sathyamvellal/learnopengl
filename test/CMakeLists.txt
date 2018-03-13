@@ -12,3 +12,5 @@ target_link_libraries(hello common)
 
 create_add_executable(hello_window)
 target_compile_definitions(hello_window PUBLIC LOG_LEVEL=${LOG_LEVEL})
+create_add_executable(hello_triangle)
+target_compile_definitions(hello_triangle PUBLIC LOG_LEVEL=${LOG_LEVEL})
