@@ -1,6 +1,8 @@
-C++ Bootstrap
-=============
+Learn OpenGL
+============
 
-My personal C++ project bootstrapping code
+Exercises from [LearnOpenGL][learnopengl]
+
+learnopengl: https://learnopengl.com/
 
 LICENSE: [MIT](https://opensource.org/licenses/MIT)
