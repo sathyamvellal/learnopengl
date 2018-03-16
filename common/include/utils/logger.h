@@ -29,7 +29,7 @@ extern const char* LogLevelString[];
 namespace Log {
     class FormattedLog {
     public:
-        FormattedLog(LogLevel level, const wchar_t* msg)
+        FormattedLog(LogLevel level, const char* msg)
                 : fmt(msg), level(level) {}
         FormattedLog(const FormattedLog& fl)
                 : fmt(fl.fmt), level(fl.level) {}
@@ -38,7 +38,7 @@ namespace Log {
         }
         ~FormattedLog() {
             if (level <= LOG_LEVEL) {
-                std::wcout << L"(" << LogLevelString[level] << L") " << fmt << std::endl;
+                std::cout << "(" << LogLevelString[level] << ") " << fmt << std::endl;
             }
         }
 
@@ -49,12 +49,12 @@ namespace Log {
         }
     private:
         LogLevel level;
-        boost::wformat fmt;
+        boost::format fmt;
     };
 };
 
 template <LogLevel level>
-Log::FormattedLog log(const wchar_t* msg) {
+Log::FormattedLog log(const char* msg) {
     return Log::FormattedLog(level, msg);
 }
 
