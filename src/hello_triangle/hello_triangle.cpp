@@ -5,7 +5,11 @@
 #include "hello_triangle/hello_triangle.h"
 
 float vertices[] = {
-        -0.5f, -0.5f, 0.0f,
-         0.5f, -0.5f, 0.0f,
-         0.0f,  0.5f, 0.0f
+        -0.5f, -0.5f,  0.0f,
+        -0.5f,  0.5f,  0.0f,
+         0.5f,  0.5f,  0.0f,
+
+         0.5f,  0.5f,  0.0f,
+         0.5f, -0.5f,  0.0f,
+        -0.5f, -0.5f,  0.0f
 };
