@@ -8,6 +8,7 @@ function(create_add_library name)
 endfunction(create_add_library)
 
 function(copy_shaders name)
+    message(copying files ...)
     file(COPY ${name}/vertex.glsl DESTINATION ${BUILD_SHADER_DIR}/${name})
     file(COPY ${name}/fragment.glsl DESTINATION ${BUILD_SHADER_DIR}/${name})
 endfunction(copy_shaders)
@@ -16,3 +17,6 @@ create_add_library(hello_window)
 
 create_add_library(hello_triangle)
 copy_shaders(hello_triangle)
+
+create_add_library(shaders)
+copy_shaders(shaders)
