@@ -3,6 +3,7 @@
 //
 
 #include <string>
+#include <initializer_list>
 
 #include <glad/glad.h>
 
@@ -17,7 +18,24 @@ Shader::Shader(const unsigned int shaderType, const std::string& filename)
     load();
 }
 
-unsigned int Shader::getId()
+Shader::Shader(const Shader& shader)
+        : shaderType(shader.shaderType), filename(shader.filename)
+{
+    load();
+}
+
+Shader Shader::operator=(const Shader& shader)
+{
+    return Shader(*this);
+}
+
+Shader::~Shader()
+{
+    // Nothing to implement here;
+    // Shader::destroy() must be called explicitly!
+}
+
+unsigned int Shader::getId() const
 {
     return this->id;
 }
@@ -66,4 +84,49 @@ void Shader::load()
 void Shader::destroy()
 {
     glDeleteShader(id);
+}
+
+ShaderProgram::ShaderProgram()
+{
+    id = glCreateProgram();
+}
+
+ShaderProgram::ShaderProgram(const ShaderProgram& shaderProgram)
+        : id(shaderProgram.id) {}
+
+ShaderProgram ShaderProgram::operator=(const ShaderProgram& shaderProgram)
+{
+    return *this;
+}
+
+ShaderProgram::~ShaderProgram()
+{
+    // Nothing to do here
+}
+
+unsigned int ShaderProgram::getId() const
+{
+    return id;
+}
+
+void ShaderProgram::use()
+{
+    glUseProgram(id);
+}
+
+void ShaderProgram::link()
+{
+    glLinkProgram(id);
+}
+
+void ShaderProgram::attachShader(const Shader& shader)
+{
+    glAttachShader(id, shader.getId());
+}
+
+void ShaderProgram::attachShaders(std::initializer_list<Shader> shaders)
+{
+    for (Shader shader : shaders) {
+        attachShader(shader);
+    }
 }
