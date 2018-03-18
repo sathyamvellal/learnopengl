@@ -63,14 +63,12 @@ int main(int argc, char** argv)
     log<LOG_VERBOSE>("creating fragment shader ...");
     Shader fragmentShader(GL_FRAGMENT_SHADER, "/Users/sathyam/repos/gh/learnopengl/build/shaders/hello_triangle/fragment.glsl");
 
-    unsigned int shaderProgram;
-    shaderProgram = glCreateProgram();
-    glAttachShader(shaderProgram, vertexShader.getId());
-    glAttachShader(shaderProgram, fragmentShader.getId());
-    glLinkProgram(shaderProgram);
+    ShaderProgram shaderProgram;
+    shaderProgram.attachShaders({vertexShader, fragmentShader});
+    shaderProgram.link();
 
     int success;
-    glGetProgramiv(shaderProgram, GL_LINK_STATUS, &success);
+    glGetProgramiv(shaderProgram.getId(), GL_LINK_STATUS, &success);
     if (!success) {
         log<LOG_CRITICAL>("ERROR: Error in linking program ...");
         exit(1);
@@ -107,7 +105,7 @@ int main(int argc, char** argv)
         glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT);
 
-        glUseProgram(shaderProgram);
+        shaderProgram.use();
         glBindVertexArray(VAO);
         glDrawArrays(GL_TRIANGLES, 0, 6);
 
