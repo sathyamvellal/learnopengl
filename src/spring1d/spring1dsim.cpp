@@ -78,14 +78,14 @@ void Spring1DSim::applyForceField(double fField)
 }
 
 void Spring1DSim::init() {
-    fTotal = 0.0;
     fField = 0.0;
     fHook = 0.0;
     fDamp = 0.0;
+    fTotal = fField + fHook + fDamp;
 
     a = 0.0;
     v = 0.0;
-    x = x0;
+    x = x0 + 5.0;
 }
 
 void Spring1DSim::run()
@@ -100,8 +100,8 @@ void Spring1DSim::step()
     double dv, dx;
 
     // Calculate each force
-    fField = m * 9.8;
-    fHook = spring1D.k * (x - x0) * (x > x0 ? -1 : 1);
+    fField = 0.0;
+    fHook = -spring1D.k * (x - x0);
 
     // Calculate total force
     fTotal = fField + fHook + fDamp;

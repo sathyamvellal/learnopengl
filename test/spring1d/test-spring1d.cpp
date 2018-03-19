@@ -12,14 +12,14 @@
 int main(int argc, char **argv)
 {
     log<LOG_VERBOSE>("Hello World");
-    Spring1DSim spring1DSim(Spring1D(5.0));
+    Spring1DSim spring1DSim(Spring1D(10.0));
 
     spring1DSim.attachMass(1.0);
-    spring1DSim.setRestLength(1000.0);
+    spring1DSim.setRestLength(10.0);
 
     spring1DSim.init();
 
-    for (int i = 0; i < 80; ++i) {
+    for (int i = 0; i < 200; ++i) {
         spring1DSim.step();
     }
 
