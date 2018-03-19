@@ -29,3 +29,5 @@ copy_shaders(shaders)
 
 create_add_library(spring1d)
 create_add_library(spring1dsim spring1d)
+
+create_add_library(spring2d)
