@@ -4,7 +4,13 @@ project(${CMAKE_PROJECT_NAME}-src)
 set(BUILD_SHADER_DIR ${CMAKE_BUILD_DIR}/shaders)
 
 function(create_add_library name)
-    add_library(${name} STATIC ${name}/${name}.cpp)
+    if (NOT ARGV1)
+        set(dir ${name})
+    else()
+        set(dir ${ARGV1})
+    endif()
+
+    add_library(${name} STATIC ${dir}/${name}.cpp)
 endfunction(create_add_library)
 
 function(copy_shaders name)
@@ -20,3 +26,6 @@ copy_shaders(hello_triangle)
 
 create_add_library(shaders)
 copy_shaders(shaders)
+
+create_add_library(spring1d)
+create_add_library(spring1dsim spring1d)
