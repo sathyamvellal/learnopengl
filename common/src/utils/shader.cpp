@@ -6,6 +6,7 @@
 #include <initializer_list>
 
 #include <glad/glad.h>
+#include <GLFW/glfw3.h>
 
 #include "utils/logger.h"
 #include "utils/files.h"
@@ -117,6 +118,14 @@ void ShaderProgram::use()
 void ShaderProgram::link()
 {
     glLinkProgram(id);
+
+    int success;
+    glGetProgramiv(id, GL_LINK_STATUS, &success);
+    if (!success) {
+        log<LOG_ERROR>("failed to link shader program ...");
+        glfwTerminate();
+        exit(1);
+    }
 }
 
 void ShaderProgram::attachShader(const Shader& shader)
