@@ -36,7 +36,7 @@ public:
     const Spring1D spring1D;
     double m;
     double x, x0;
-    double fTotal, fField, fHook, fDamp;
+    double fTotal, fField, fHook, fDamp, fInst;
     double dt, a, v;
 };
 

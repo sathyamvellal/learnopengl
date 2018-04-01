@@ -85,7 +85,7 @@ void Spring1DSim::init() {
 
     a = 0.0;
     v = 0.0;
-    x = x0 + 5.0;
+    x = x0;
 }
 
 void Spring1DSim::run()
@@ -100,11 +100,12 @@ void Spring1DSim::step()
     double dv, dx;
 
     // Calculate each force
-    fField = 0.0;
     fHook = -spring1D.k * (x - x0);
+    fDamp = -1.0 * v;
 
     // Calculate total force
-    fTotal = fField + fHook + fDamp;
+    fTotal = fField + fInst + fHook + fDamp;
+    fInst = 0.0;
 
     // Calculate acceleration
     a = fTotal / m;
