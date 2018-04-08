@@ -52,8 +52,7 @@ void main()
     gl_Position = vec4(aPos.x, aPos.y, aPos.z, 1.0f);
 
     float d = dot(aVel, aVel);
-    d = (1.0f - d);
-    vec3 rgb = hsl2rgb(d, 1.0f, 0.5f);
+    vec3 rgb = hsl2rgb(d * 0.8f, 1.0f, 0.5f);
 
     vColor = vec4(rgb, 1.0f);
 }

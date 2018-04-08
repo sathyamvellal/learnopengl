@@ -17,7 +17,10 @@ const unsigned int HEIGHT = 600;
 const char *TITLE = "CS520 HW2: Particle Flow";
 
 void framebufferSizeCallback(GLFWwindow *window, int width, int height);
+void mouseButtonCallback(GLFWwindow *window, int button, int action, int mods);
 void processInput(GLFWwindow *window);
+
+bool lbutton = false;
 
 int main(int argc, char **argv)
 {
@@ -48,6 +51,7 @@ int main(int argc, char **argv)
     }
 
     glfwSetFramebufferSizeCallback(window, framebufferSizeCallback);
+    glfwSetMouseButtonCallback(window, mouseButtonCallback);
 
     Shader vertexShader(GL_VERTEX_SHADER, "shaders/particleflow/vertex.glsl");
     Shader fragmentShader(GL_FRAGMENT_SHADER, "shaders/particleflow/fragment.glsl");
@@ -91,6 +95,8 @@ int main(int argc, char **argv)
         float timeValue = glfwGetTime();
         float sineValue = sin(timeValue) / 2.0f;
 
+        step();
+
         shaderProgram.use();
         int vertexColorLocation = glGetUniformLocation(shaderProgram.getId(), "ourColor");
         glUniform4f(vertexColorLocation, 1.0f, 1.0f, 1.0f, 1.0f);
@@ -113,10 +119,12 @@ int main(int argc, char **argv)
         glfwSwapBuffers(window);
         glfwPollEvents();
 
-        double xpos, ypos;
-        glfwGetCursorPos(window, &xpos, &ypos);
-        o.x = (2 * xpos - WIDTH) / WIDTH;
-        o.y = -(2 * ypos - HEIGHT) / HEIGHT;
+        if (lbutton) {
+            double xpos, ypos;
+            glfwGetCursorPos(window, &xpos, &ypos);
+            o.x = (2 * xpos - WIDTH) / WIDTH;
+            o.y = -(2 * ypos - HEIGHT) / HEIGHT;
+        }
     }
 
     glDeleteVertexArrays(1, &VAO);
@@ -132,6 +140,17 @@ void framebufferSizeCallback(GLFWwindow *window, int width, int height)
     glViewport(0, 0, width, height);
 }
 
+void mouseButtonCallback(GLFWwindow *window, int button, int action, int mods)
+{
+    if (button == GLFW_MOUSE_BUTTON_LEFT) {
+        if (action == GLFW_PRESS) {
+            lbutton = true;
+        } else if (action == GLFW_RELEASE) {
+            lbutton = false;
+        }
+    }
+}
+
 void processInput(GLFWwindow *window)
 {
     if (glfwGetKey(window, GLFW_KEY_ENTER) == GLFW_PRESS) {
@@ -140,12 +159,5 @@ void processInput(GLFWwindow *window)
 
     if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS) {
         glfwSetWindowShouldClose(window, true);
-    }
-
-    if (glfwGetKey(window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS)
-    {
-        double xpos, ypos;
-        glfwGetCursorPos(window, &xpos, &ypos);
-        std::cout << "Cursor Position at (" << xpos << " : " << ypos << std::endl;
     }
 }
