@@ -31,4 +31,5 @@ create_add_library(spring1d)
 create_add_library(spring1dsim spring1d)
 copy_shaders(spring1d)
 
-create_add_library(spring2d)
+create_add_library(spring2d)create_add_library(particleflow)
+copy_shaders(particleflow)
