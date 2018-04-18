@@ -30,3 +30,6 @@ create_add_library(spring2d spring2dsim)
 
 create_add_library(particleflow particleflow)
 copy_shaders(particleflow)
+
+create_add_library(blobbies blobbies)
+copy_shaders(blobbies)

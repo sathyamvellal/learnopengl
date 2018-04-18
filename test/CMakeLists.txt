@@ -29,3 +29,6 @@ target_compile_definitions(spring2d PUBLIC LOG_LEVEL=${LOG_LEVEL})
 
 create_add_executable(particleflow test-particleflow particleflow)
 target_compile_definitions(particleflow PUBLIC LOG_LEVEL=${LOG_LEVEL})
+
+create_add_executable(blobbies test-blobbies blobbies)
+target_compile_definitions(blobbies PUBLIC LOG_LEVEL=${LOG_LEVEL})
