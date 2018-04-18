@@ -94,7 +94,7 @@ void init()
         // std::cout << "(" << vertices1[3 * i + X] << ", " << vertices1[3 * i + Y] << ", " << vertices1[3 * i + Z]  << ")" << std::endl;
     }
 
-    o = glm::vec3((float) rand() / RAND_MAX, (float) rand() / RAND_MAX, 0.0f);
+    o = glm::vec3((float) rand() / RAND_MAX * 2 - 1.0f, (float) rand() / RAND_MAX * 2 - 1.0f, 0.0f);
 }
 
 void step()
@@ -107,10 +107,10 @@ void step()
         float dx, dy;
         glm::vec3 a;
 
-        if (d > 0.1) {
+        if (d > 0.08) {
             a.x = dd * 0.0075 * ((p.x - o.x) > 0 ? -1 : 1);
             a.y = dd * 0.0075 * ((p.y - o.y) > 0 ? -1 : 1);
-        } else if (d > 0.01) {
+        } else if (d > 0.008) {
             a.x = dd * 0.05 * ((p.x - o.x) > 0 ? 1 : -1);
             a.y = dd * 0.05 * ((p.y - o.y) > 0 ? 1 : -1);
             velocities2[i][X] *= 0.9;
