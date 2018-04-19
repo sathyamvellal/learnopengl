@@ -7,9 +7,13 @@
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 
+#include <glm/glm.hpp>
+
 #include "utils/logger.h"
+#include "utils/random.h"
 #include "utils/shader.h"
-#include "utils/shapes.hpp"
+#include "utils/shapes/circle.hpp"
+#include "utils/shapes/grid.hpp"
 
 #include "sandbox001/sandbox001.h"
 
@@ -52,8 +56,8 @@ int main(int argc, char **argv)
 
     glfwSetFramebufferSizeCallback(window, framebufferSizeCallback);
 
-    Shader vertexShader(GL_VERTEX_SHADER, "shaders/blobbies/vertex.glsl");
-    Shader fragmentShader(GL_FRAGMENT_SHADER, "shaders/blobbies/fragment.glsl");
+    Shader vertexShader(GL_VERTEX_SHADER, "shaders/sandbox001/vertex.glsl");
+    Shader fragmentShader(GL_FRAGMENT_SHADER, "shaders/sandbox001/fragment.glsl");
 
     ShaderProgram shaderProgram;
     shaderProgram.attachShaders({vertexShader, fragmentShader});
@@ -61,36 +65,28 @@ int main(int argc, char **argv)
     vertexShader.destroy();
     fragmentShader.destroy();
 
-    Circle<float> circle(0.5f);
-    circle.make();
+    Grid<double> grid;
+    std::vector<Circle<double>> circles;
 
-    unsigned int VBO, VAO;
-    glGenVertexArrays(1, &VAO);
-    glGenBuffers(1, &VBO);
-
-    glBindVertexArray(VAO);
-    glBindBuffer(GL_ARRAY_BUFFER, VBO);
-
-    glBufferData(GL_ARRAY_BUFFER, circle.vertices.size(), &circle.vertices[0].x, GL_STATIC_DRAW);
-    glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (void*)(0));
-    glEnableVertexAttribArray(0);
-
-    glBindBuffer(GL_ARRAY_BUFFER, 0);
-    glBindVertexArray(0);
-
+    grid.make();
+    grid.drawInit(shaderProgram);
+    for (int i = 0; i < 5; ++i) {
+        circles.emplace_back(Circle<double>(glm::tvec4<double>(signdrand(), signdrand(), 0.0, 1.0), 0.2 * drand()));
+        circles[i].make();
+        circles[i].drawInit(shaderProgram);
+    }
 
     while(!glfwWindowShouldClose(window)) { processInput(window);
 
         glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-        int vertexColorLocation = glGetUniformLocation(shaderProgram.getId(), "ourColor");
-
-        shaderProgram.use();
-        glUniform4f(vertexColorLocation, 0.0f, 1.0f, 0.0f, 1.0f);
-
-        glBindVertexArray(VAO);
-        glDrawArrays(GL_LINE_STRIP, 0, circle.vertices.size());
+        grid.draw();
+        grid.step();
+        for (int i = 0; i < 5; ++i) {
+            circles[i].draw();
+            circles[i].step();
+        }
 
         glfwSwapBuffers(window);
         glfwPollEvents();
