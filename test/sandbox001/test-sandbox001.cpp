@@ -9,11 +9,12 @@
 
 #include "utils/logger.h"
 #include "utils/shader.h"
+#include "utils/shapes.hpp"
 
 #include "sandbox001/sandbox001.h"
 
 const unsigned int WIDTH = 800;
-const unsigned int HEIGHT = 600;
+const unsigned int HEIGHT = 800;
 const char *TITLE = "Sandbox 001";
 
 void framebufferSizeCallback(GLFWwindow *window, int width, int height);
@@ -60,12 +61,36 @@ int main(int argc, char **argv)
     vertexShader.destroy();
     fragmentShader.destroy();
 
+    Circle<float> circle(0.5f);
+    circle.make();
+
+    unsigned int VBO, VAO;
+    glGenVertexArrays(1, &VAO);
+    glGenBuffers(1, &VBO);
+
+    glBindVertexArray(VAO);
+    glBindBuffer(GL_ARRAY_BUFFER, VBO);
+
+    glBufferData(GL_ARRAY_BUFFER, circle.vertices.size(), &circle.vertices[0].x, GL_STATIC_DRAW);
+    glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (void*)(0));
+    glEnableVertexAttribArray(0);
+
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
+    glBindVertexArray(0);
+
+
     while(!glfwWindowShouldClose(window)) { processInput(window);
 
         glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-        draw();
+        int vertexColorLocation = glGetUniformLocation(shaderProgram.getId(), "ourColor");
+
+        shaderProgram.use();
+        glUniform4f(vertexColorLocation, 0.0f, 1.0f, 0.0f, 1.0f);
+
+        glBindVertexArray(VAO);
+        glDrawArrays(GL_LINE_STRIP, 0, circle.vertices.size());
 
         glfwSwapBuffers(window);
         glfwPollEvents();
