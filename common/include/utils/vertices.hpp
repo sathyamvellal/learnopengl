@@ -11,8 +11,12 @@
 template <class T>
 class Vertices {
 public:
-    std::size_t size() {
-        return _vertices.size() * 4 * sizeof(T);
+    int size() {
+        return (int) _vertices.size() * 4 * sizeof(T);
+    }
+
+    int length() {
+        return (int) _vertices.size();
     }
 
     T* data() {
