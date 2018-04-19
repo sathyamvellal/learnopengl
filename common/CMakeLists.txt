@@ -10,4 +10,5 @@ add_library(common STATIC
         ${COMMON_SRC}/hello.cpp
         ${UTILS_SRC}/logger.cpp
         ${UTILS_SRC}/files.cpp
-        ${UTILS_SRC}/shader.cpp)
+        ${UTILS_SRC}/shader.cpp
+        ${UTILS_SRC}/random.cpp)
