@@ -32,3 +32,6 @@ target_compile_definitions(particleflow PUBLIC LOG_LEVEL=${LOG_LEVEL})
 
 create_add_executable(blobbies test-blobbies blobbies)
 target_compile_definitions(blobbies PUBLIC LOG_LEVEL=${LOG_LEVEL})
+
+create_add_executable(sandbox001 test-sandbox001 sandbox001)
+target_compile_definitions(sandbox001 PUBLIC LOG_LEVEL=${LOG_LEVEL})

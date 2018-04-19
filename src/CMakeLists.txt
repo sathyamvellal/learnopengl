@@ -33,3 +33,6 @@ copy_shaders(particleflow)
 
 create_add_library(blobbies blobbies)
 copy_shaders(blobbies)
+
+create_add_library(sandbox001 sandbox001)
+copy_shaders(sandbox001)
