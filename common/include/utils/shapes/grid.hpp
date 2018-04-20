@@ -77,13 +77,11 @@ public:
         for (int j = 0; j < _width; ++j) {
             double x = -1.0;
             for (int i = 0; i < _width; ++i) {
-                bool isInside = false;
+                double val = 0.0;
                 for (int k = 0; k < circles.size(); ++k) {
-                    if (circles[k].has(x, y)) {
-                        isInside = true;
-                    }
+                    val += isovalue(x, y, circles[k]);
                 }
-                state.set2(i, j, isInside);
+                state.set2(i, j, val > 1.0 ? 1 : 0);
 #if 0
                 vertices.push(GridContainer(
                         glm::tvec4<T>(x,   y,   0.0, 1.0),
@@ -128,9 +126,16 @@ public:
     void step() {
         remake();
     }
+
+    double isovalue(double x, double y, Circle<T> &circle) {
+        double dx = x - circle.center.x;
+        double dy = y - circle.center.y;
+        double d2 = dx * dx + dy * dy;
+        return circle.radius * circle.radius / d2;
+    }
 public:
     Vertices<GridContainer> vertices;
-    Vertices<bool> state;
+    Vertices<int> state;
     unsigned int res;
     unsigned int _width;
 

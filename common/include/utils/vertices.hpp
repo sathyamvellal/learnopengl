@@ -55,7 +55,7 @@ public:
         return _vertices[i * _width + j];
     }
 
-    void set2(unsigned int i, unsigned int j, T& value) {
+    void set2(unsigned int i, unsigned int j, T value) {
         _vertices[i * _width + j] = value;
     }
 public:

@@ -68,7 +68,7 @@ int main(int argc, char **argv)
     fragmentShader.destroy();
 
     std::vector<Circle<double>> circles;
-    int nCircles = 10;
+    int nCircles = 5;
     Grid<double> grid(circles);
     GridOverlay<double> gridOverlay(grid);
 
