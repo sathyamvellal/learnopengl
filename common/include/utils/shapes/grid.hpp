@@ -11,11 +11,13 @@
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 
+#include "common/include/utils/logger.h"
 #include "common/include/utils/random.h"
 #include "common/include/utils/shader.h"
 #include "common/include/utils/vertices.hpp"
+#include "common/include/utils/shapes/circle.hpp"
 
-const unsigned int GRID_DEFAULT_RES = 16;
+const unsigned int GRID_RES = 100;
 
 template <typename T>
 struct GridVertexPositionColour {
@@ -51,27 +53,47 @@ class Grid {
     using GridContainer = GridVertexPositionColour<T>;
 //    using GridContainer = GridVertexPosition<T>;
 public:
-    Grid(unsigned int res = GRID_DEFAULT_RES)
-        :res(res) {
-        vertices._vertices.reserve((res + 1) * (res + 1));
-        make();
-    }
-
-    void make() {
+    Grid(std::vector<Circle<T>> &circles, unsigned int res = GRID_RES)
+        :circles(circles), res(res), _width(res + 1), vertices(res), state(res) {
 #if 1
-        double dx = 2.0 / res;
-        double dy = 2.0 / res;
-
-        int count = 0;
-        for (double i = -1.0; i <= 1.0; i += dx) {
-            for (double j = -1.0; j <= 1.0; j += dy) {
-                vertices.push(GridContainer(
-                        glm::tvec4<T>(i,   j,   0.0, 1.0),
-                        glm::tvec4<T>(1.0, 0.3, 1.0, 1.0)
-                ));
+        for (int i = 0; i < _width; ++i) {
+            for (int j = 0; j < _width; ++j) {
+                state.push(false);
             }
         }
 #endif
+        make();
+    }
+
+    GridContainer& operator()(int i, int j) {
+        return vertices[i * _width + j];
+    }
+
+    void make() {
+        double dx = 2.0 / res;
+        double dy = 2.0 / res;
+
+        double y = 1.0;
+        for (int j = 0; j < _width; ++j) {
+            double x = -1.0;
+            for (int i = 0; i < _width; ++i) {
+                bool isInside = false;
+                for (int k = 0; k < circles.size(); ++k) {
+                    if (circles[k].has(x, y)) {
+                        isInside = true;
+                    }
+                }
+                state.set2(i, j, isInside);
+#if 0
+                vertices.push(GridContainer(
+                        glm::tvec4<T>(x,   y,   0.0, 1.0),
+                        glm::tvec4<T>(1.0, (state.get2(i, j) ? 0.0 : 1.0), (state.get2(i, j) ? 0.0 : 1.0), 1.0)
+                ));
+#endif
+                x += dx;
+            }
+            y -= dy;
+        }
     }
 
     void remake() {
@@ -108,10 +130,14 @@ public:
     }
 public:
     Vertices<GridContainer> vertices;
+    Vertices<bool> state;
     unsigned int res;
+    unsigned int _width;
 
     unsigned int VAO, VBO;
     ShaderProgram *shaderProgram;
+
+    std::vector<Circle<double>> &circles;
 };
 
 #endif //LEARNOPENGL_GRID_HPP
