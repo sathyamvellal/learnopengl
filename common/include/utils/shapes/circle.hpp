@@ -53,15 +53,20 @@ class Circle {
     using CircleContainer = CircleVertexPositionColour<T>;
 public:
     Circle<T>(glm::tvec4<T> center, T radius, unsigned int res = CIRCLE_DEFAULT_RES)
-            :center(center), radius(radius), res(res), theta(2 * M_PI / res), shaderProgram(0) {
-        vertices._vertices.reserve(res+1);
+            :center(center), radius(radius), res(res), theta(2 * M_PI / res), shaderProgram(0), vertices() {
+        vertices._vertices.reserve(res + 1);
         if (fabs(center.x) > (1.0 - radius)) this->center.x = (center.x > 0 ? 0.25 : -0.25);
         if (fabs(center.y) > (1.0 - radius)) this->center.y = (center.y > 0 ? 0.25 : -0.25);
         make();
     }
 
+    bool has(T x, T y) {
+        return sqrt((center.x - x) * (center.x - x) + (center.y - y) * (center.y - y)) <= radius;
+    }
+
     void make() {
         for (int i = 0; i <= res; ++i) {
+#if 0
             vertices.push(CircleContainer(
                     glm::tvec4<T>(center.x - std::cos(i * theta) * radius,
                                   center.y - std::sin(i * theta) * radius,
@@ -69,6 +74,7 @@ public:
                                   1.0f),
                     glm::tvec4<T>(0.0, 1.0, 0.0, 1.0)
             ));
+#endif
         }
     }
 
