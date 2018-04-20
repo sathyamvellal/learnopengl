@@ -13,65 +13,54 @@
 template <class T>
 class Vertices {
 public:
-#if VERTICES_OLD
-    int size() {
-        return (int) _vertices.size() * 4 * sizeof(T);
+    Vertices(int width = 0)
+        :_width(width) {
+        if (width > 0) {
+            _vertices.reserve((std::size_t) _width * _width);
+        }
     }
-#else
+
     int size() {
         return (int) _vertices.size() * sizeof(T);
     }
-#endif
 
     int length() {
         return (int) _vertices.size();
+    }
+
+    int width() {
+        return _width;
     }
 
     T* data() {
         return _vertices.data();
     }
 
-#if VERTICES_OLD
-    Vertices<T>& push(glm::tvec4<T> v) {
-        _vertices.emplace_back(v);
-        return *this;
-    }
-#else
     Vertices<T>& push(T elem) {
-        _vertices.emplace_back(elem);
+        _vertices.push_back(elem);
         return *this;
     }
-#endif
 
-#if VERTICES_OLD
-    glm::tvec4<T> pop() {
-        glm::tvec4<T> front = _vertices.front();
-        _vertices.pop_back();
-        return front;
-    }
-#else
     T pop() {
         T front = _vertices.front();
         _vertices.pop_back();
         return front;
     }
-#endif
 
-#if VERTICES_OLD
-    glm::tvec4<T>& operator[](unsigned int i) {
+    T& operator[](unsigned int i) {
         return _vertices[i];
     }
-#else
-    T operator[](unsigned int i) {
-        return _vertices[i];
+
+    T get2(unsigned int i, unsigned int j) {
+        return _vertices[i * _width + j];
     }
-#endif
+
+    void set2(unsigned int i, unsigned int j, T& value) {
+        _vertices[i * _width + j] = value;
+    }
 public:
-#if VERTICES_OLD
-    std::vector<glm::tvec4<T>> _vertices;
-#else
     std::vector<T> _vertices;
-#endif
+    int _width;
 };
 
 #endif //LEARNOPENGL_VERTICES_H
