@@ -17,7 +17,7 @@
 #include "common/include/utils/vertices.hpp"
 #include "common/include/utils/shapes/circle.hpp"
 
-const unsigned int GRID_RES = 100;
+const unsigned int GRID_RES = 256;
 
 template <typename T>
 struct GridVertexPositionColour {
@@ -54,11 +54,11 @@ class Grid {
 //    using GridContainer = GridVertexPosition<T>;
 public:
     Grid(std::vector<Circle<T>> &circles, unsigned int res = GRID_RES)
-        :circles(circles), res(res), _width(res + 1), vertices(res), state(res) {
+        :circles(circles), res(res), _width(res + 1), vertices(res), iso(res) {
 #if 1
         for (int i = 0; i < _width; ++i) {
             for (int j = 0; j < _width; ++j) {
-                state.push(false);
+                iso.push(0.0);
             }
         }
 #endif
@@ -81,11 +81,11 @@ public:
                 for (int k = 0; k < circles.size(); ++k) {
                     val += isovalue(x, y, circles[k]);
                 }
-                state.set2(i, j, val > 1.0 ? 1 : 0);
+                iso.set2(i, j, val);
 #if 0
                 vertices.push(GridContainer(
                         glm::tvec4<T>(x,   y,   0.0, 1.0),
-                        glm::tvec4<T>(1.0, (state.get2(i, j) ? 0.0 : 1.0), (state.get2(i, j) ? 0.0 : 1.0), 1.0)
+                        glm::tvec4<T>(1.0, (iso.get2(i, j) > 1.0 ? 0.0 : 1.0), (iso.get2(i, j) > 1.0 ? 0.0 : 1.0), 1.0)
                 ));
 #endif
                 x += dx;
@@ -135,7 +135,7 @@ public:
     }
 public:
     Vertices<GridContainer> vertices;
-    Vertices<int> state;
+    Vertices<double> iso;
     unsigned int res;
     unsigned int _width;
 

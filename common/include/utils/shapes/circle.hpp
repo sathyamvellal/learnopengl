@@ -115,7 +115,9 @@ public:
     void step() {
         center.x += vdt.x * dir.x;
         center.y += vdt.y * dir.y;
+#if 0
         remake();
+#endif
 
         if (fabs(center.x) > (1.0 - radius)) dir.x *= -1;
         if (fabs(center.y) > (1.0 - radius)) dir.y *= -1;
