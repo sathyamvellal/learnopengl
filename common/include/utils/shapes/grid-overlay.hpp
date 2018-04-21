@@ -107,63 +107,93 @@ public:
     void processCell(int i, int j, double x, double y, double dx, double dy) {
         const std::string ONE = "1";
         const std::string ZERO = "0";
-        const glm::tvec4<T> lineColour(1.0, 1.0, 0.0, 1.0);
         const double dx2 = dx / 2;
         const double dy2 = dx / 2;
-        std::string type = (grid.state.get2(i, j) ? ONE : ZERO)
-                           + (grid.state.get2(i + 1, j) ? ONE : ZERO)
-                           + (grid.state.get2(i + 1, j + 1) ? ONE : ZERO)
-                           + (grid.state.get2(i, j + 1) ? ONE : ZERO);
 
-#define PUSH(X, Y) vertices.push(GridContainer(glm::tvec4<T>((X), (Y), 0.0, 1.0), lineColour))
+#define THRESHOLD(I, J) (grid.iso.get2((I), (J)) > 0.05 ? ONE : ZERO)
+
+        std::string type = THRESHOLD(i, j)
+                           + THRESHOLD(i + 1, j)
+                           + THRESHOLD(i + 1, j + 1)
+                           + THRESHOLD(i, j + 1);
+
+        const double LERPXN = lerp(i, j, i + 1, j, dx);
+        const double LERPXS = lerp(i, j + 1, i + 1, j + 1, dx);
+        const double LERPYW = lerp(i, j, i, j + 1, dy);
+        const double LERPYE = lerp(i + 1, j, i + 1, j + 1, dy);
 
         if (type == "1000") {
-            PUSH(x, y - dy2);
-            PUSH(x + dx2, y);
+            push(x, y - LERPYW);
+            push(x + LERPXN, y);
         } else if (type == "0100") {
-            PUSH(x + dx2, y);
-            PUSH(x + dx, y - dy2);
+            push(x + LERPXN, y); //push(x + dx2, y);
+            push(x + dx, y - LERPYE); //push(x + dx, y - dy2);
         } else if (type == "0010") {
-            PUSH(x + dx, y - dy2);
-            PUSH(x + dx2, y - dy);
+            push(x + dx, y - LERPYE); //push(x + dx, y - dy2);
+            push(x + LERPXS, y - dy); //push(x + dx2, y - dy);
         } else if (type == "0001") {
-            PUSH(x, y - dy2);
-            PUSH(x + dx2, y - dy);
+            push(x + LERPXS, y - dy);
+            push(x, y - LERPYW);
         } else if (type == "1001") {
-            PUSH(x + dx2, y);
-            PUSH(x + dx2, y - dy);
+            push(x + LERPXN, y);
+            push(x + LERPXS, y - dy);
         } else if (type == "1100") {
-            PUSH(x, y - dy2);
-            PUSH(x + dx, y - dy2);
+            push(x, y - LERPYW); //push(x, y - dy2);
+            push(x + dx, y - LERPYE); //push(x + dx, y - dy2);
         } else if (type == "0110") {
-            PUSH(x + dx2, y);
-            PUSH(x + dx2, y - dy);
+            push(x + LERPXN, y);
+            push(x + LERPXS, y - dy);
         } else if (type == "0011") {
-            PUSH(x, y - dy2);
-            PUSH(x + dx, y - dy2);
+            push(x, y - LERPYW);
+            push(x + dx, y - LERPYE);
         } else if (type == "1110") {
-            PUSH(x, y - dy2);
-            PUSH(x + dx2, y - dy);
+            push(x, y - LERPYW);
+            push(x + LERPXS, y - dy);
         } else if (type == "0111") {
-            PUSH(x, y - dy2);
-            PUSH(x + dx2, y);
+            push(x, y - LERPYW);
+            push(x + LERPXN, y);
         } else if (type == "1011") {
-            PUSH(x + dx2, y);
-            PUSH(x + dx, y - dy2);
+            push(x + LERPXN, y);
+            push(x + dx, y - LERPYE);
         } else if (type == "1101") {
-            PUSH(x + dx, y - dy2);
-            PUSH(x + dx2, y - dy);
+            push(x + dx, y - LERPYE);
+            push(x + LERPXS, y - dy);
         } else if (type == "0101") {
-            PUSH(x + dx2, y);
-            PUSH(x + dx, y - dy2);
-            PUSH(x, y - dy2);
-            PUSH(x + dx2, y - dy);
+            push(x + LERPXN, y);
+            push(x + dx, y - LERPYE);
+            push(x, y - LERPYW);
+            push(x + LERPXS, y - dy);
         } else if (type == "1010") {
-            PUSH(x, y - dy2);
-            PUSH(x + dx2, y);
-            PUSH(x + dx, y - dy2);
-            PUSH(x + dx2, y - dy);
+            push(x, y - LERPYW);
+            push(x + LERPXN, y);
+            push(x + dx, y - LERPYE);
+            push(x + LERPXS, y - dy);
         }
+    }
+
+#if 0
+    double lerpx(int i, int j, double x, double dx) {
+        double a = grid.iso.get2(i, j);
+        double b = grid.iso.get2(i + 1, j);
+        return lerp(a, b);
+    }
+
+    double lerpy(int i, int j, double y, double dy) {
+        double a = grid.iso.get2(i, j);
+        double b = grid.iso.get2(i, j + 1);
+        return lerp(a, b);
+    }
+#endif
+
+    double lerp(int ai, int aj, int bi, int bj, double v) {
+        double a = grid.iso.get2(ai, aj);
+        double b = grid.iso.get2(bi, bj);
+        return (a - b) / 2 * v;
+    }
+
+    void push(double x, double y) {
+        static const glm::tvec4<T> lineColour(1.0, 1.0, 0.0, 1.0);
+        vertices.push(GridContainer(glm::tvec4<T>((x), (y), 0.0, 1.0), lineColour));
     }
 public:
     Vertices<GridContainer> vertices;
